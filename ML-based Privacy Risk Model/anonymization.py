@@ -55,6 +55,8 @@ def apply_anonymization(df):
         else:
             return "50+"
 
+    df["payment_amount"] = df["payment_amount"].astype(object)
+
     df.loc[medium_risk.index, "payment_amount"] = df.loc[
         medium_risk.index, "payment_amount"
     ].apply(bucket)

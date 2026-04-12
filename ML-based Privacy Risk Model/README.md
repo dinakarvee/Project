@@ -264,7 +264,7 @@ project/
 │   ├── feature_engineering.py
 │   ├── risk_model.py
 │   ├── anonymization.py
-│   ├── pipeline.py
+│   ├── main.py
 │
 ├── outputs/
 │   ├── metrics/

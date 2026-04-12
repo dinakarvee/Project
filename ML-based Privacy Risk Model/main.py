@@ -1,6 +1,6 @@
 from ingestion import load_data
 from config import DATA_PATH, OUTPUT_PATH
-
+import os
 from feature_engineering import feature_engineering_pipeline
 from risk_model import train_model, predict_risk
 from anonymization import anonymization_pipeline
@@ -31,7 +31,13 @@ def run_pipeline():
     df_before = df.copy()
 
     # Step 5: Anonymization
-    df_after = anonymization_pipeline(df)
+    df_after = anonymization_pipeline(df.copy())
+
+    # Recompute features AFTER anonymization
+    df_after = feature_engineering_pipeline(df_after)
+
+    # Recalculate risk
+    df_after = predict_risk(model, df_after)
 
     # Step 6: Visualization
     print("🔹 Generating visualizations...")
@@ -54,6 +60,7 @@ def run_pipeline():
 
     # Step 7: Save Output
     print("🔹 Saving processed dataset...")
+    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     df_after.to_parquet(OUTPUT_PATH, index=False)
 
     print(f"✅ Process complete. File saved at: {OUTPUT_PATH}")

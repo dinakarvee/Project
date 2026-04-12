@@ -1,7 +1,7 @@
 
 
-DATA_PATH = "C:/Users/dinak/Downloads/app_data/day_1.parquet"
-OUTPUT_PATH = "C:/Users/dinak/Downloads/app_data/day_1_processed.parquet"
+DATA_PATH = "D:/GitHub/Project/ML-based Privacy Risk Model/DataSet/raw/day_1.parquet"
+OUTPUT_PATH = "D:/GitHub/Project/ML-based Privacy Risk Model/DataSet/anonymized/day_1_processed.parquet"
 
 K_ANONYMITY = 5
 

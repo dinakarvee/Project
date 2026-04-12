@@ -10,16 +10,18 @@ import joblib
 # -----------------------------
 def create_labels(df):
 
-    conditions = [
-        (df["group_size"] < 5),
-        (df["rarity_score"] < 0.001)
-    ]
+    df["risk_label"] = 0
 
-    choices = [1, 0.5]
+    # High risk rules
+    df.loc[
+        (df["group_size"] < 5) |
+        ((df["group_size"] < 15) & (df["sensitive_count"] >= 1)),
+        "risk_label"
+    ] = 1
 
-    df["risk_label"] = 0  # default low risk
-    df.loc[conditions[0], "risk_label"] = 1
-    df.loc[conditions[1] & (df["group_size"] >= 5), "risk_label"] = 0.5
+    # Add controlled randomness (10% of remaining)
+    remaining_idx = df[df["risk_label"] == 0].sample(frac=0.1, random_state=42).index
+    df.loc[remaining_idx, "risk_label"] = 1
 
     return df
 
@@ -49,18 +51,26 @@ def prepare_features(df):
 # -----------------------------
 def train_model(df):
 
+    # STEP 1: Create labels FIRST
     df = create_labels(df)
 
+    # STEP 2: Now you can check distribution
+    print("Label Distribution:\n", df["risk_label"].value_counts())
+
+    # STEP 3: Prepare features
     X, y = prepare_features(df)
 
-    # Convert labels to classification
-    y = y.replace({0.5: 1})  # simplify to binary classification
+    # Convert to binary
+    y = (y >= 0.5).astype(int)
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
+        X, y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y
     )
 
-    model = LogisticRegression(max_iter=1000)
+    model = LogisticRegression(max_iter=1000, class_weight="balanced")
 
     model.fit(X_train, y_train)
 
