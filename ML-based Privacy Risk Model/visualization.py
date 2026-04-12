@@ -32,9 +32,6 @@ def compare_risk(before_df, after_df):
 
     print("Before Risk:", before_mean)
     print("After Risk:", after_mean)
-    print("Risk Reduction %:", 
-      (df_before["risk_score"].mean() - df_after["risk_score"].mean()) 
-      / df_before["risk_score"].mean() * 100)
 
 
 # -----------------------------
