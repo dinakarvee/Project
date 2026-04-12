@@ -253,15 +253,23 @@ Risk After: 0.28
 project/
 │
 ├── data/
+│   ├── raw/
+│   ├── processed/
+│   ├── anonymized/
 ├── notebooks/
+│   ├── Exploration.ipynb
 ├── src/
+│   ├── config.py
 │   ├── ingestion.py
 │   ├── feature_engineering.py
-│   ├── model.py
+│   ├── risk_model.py
 │   ├── anonymization.py
 │   ├── pipeline.py
 │
 ├── outputs/
+│   ├── metrics/
+│   ├── logs/
+│   ├── reports/
 ├── README.md
 └── requirements.txt
 ```
