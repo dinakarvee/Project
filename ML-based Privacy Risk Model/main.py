@@ -64,6 +64,9 @@ def run_pipeline():
     df_after.to_parquet(OUTPUT_PATH, index=False)
 
     print(f"✅ Process complete. File saved at: {OUTPUT_PATH}")
+    print("Risk Reduction %:", 
+      (df_before["risk_score"].mean() - df_after["risk_score"].mean()) 
+      / df_before["risk_score"].mean() * 100)
 
 
 if __name__ == "__main__":
