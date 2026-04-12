@@ -1,4 +1,5 @@
-import pandas as pd
+from ingestion import load_data
+from config import DATA_PATH, OUTPUT_PATH
 
 from feature_engineering import feature_engineering_pipeline
 from risk_model import train_model, predict_risk
@@ -10,45 +11,36 @@ from visualization import (
 )
 
 
-# -----------------------------
-# CONFIG
-# -----------------------------
-DATA_PATH = "D:/GitHub/Project/ML-based Privacy Risk Model/DataSet/day_1.parquet"
-
-
-# -----------------------------
-# MAIN PIPELINE
-# -----------------------------
 def run_pipeline():
 
-    print("🔹 Loading dataset...")
-    df = pd.read_parquet(DATA_PATH)
+    # Step 1: Load Data
+    df = load_data(DATA_PATH)
 
+    # Step 2: Feature Engineering
     print("🔹 Running feature engineering...")
     df = feature_engineering_pipeline(df)
 
+    # Step 3: Train Model
     print("🔹 Training ML model...")
     model = train_model(df)
 
+    # Step 4: Predict Risk
     print("🔹 Predicting risk scores...")
     df = predict_risk(model, df)
 
-    # Save copy BEFORE anonymization
     df_before = df.copy()
 
-    print("🔹 Applying anonymization...")
+    # Step 5: Anonymization
     df_after = anonymization_pipeline(df)
 
+    # Step 6: Visualization
     print("🔹 Generating visualizations...")
 
-    # Risk distributions
     plot_risk_distribution(df_before, "Risk Distribution - Before")
     plot_risk_distribution(df_after, "Risk Distribution - After")
 
-    # Comparison
     compare_risk(df_before, df_after)
 
-    # Feature importance
     feature_names = [
         "group_size",
         "uniqueness_score",
@@ -60,16 +52,12 @@ def run_pipeline():
 
     plot_feature_importance(model, feature_names)
 
+    # Step 7: Save Output
     print("🔹 Saving processed dataset...")
+    df_after.to_parquet(OUTPUT_PATH, index=False)
 
-    output_path = "C:/Users/dinak/Downloads/app_data/day_1_processed.parquet"
-    df_after.to_parquet(output_path, index=False)
-
-    print(f"✅ Process complete. File saved at: {output_path}")
+    print(f"✅ Process complete. File saved at: {OUTPUT_PATH}")
 
 
-# -----------------------------
-# RUN
-# -----------------------------
 if __name__ == "__main__":
     run_pipeline()
