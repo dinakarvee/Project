@@ -67,6 +67,44 @@ def run_pipeline():
     print("Risk Reduction %:", 
       (df_before["risk_score"].mean() - df_after["risk_score"].mean()) 
       / df_before["risk_score"].mean() * 100)
+    
+
+    # -----------------------------
+    # FINAL OUTPUT SHOWCASE
+    # -----------------------------
+
+    print("\n================ FINAL OUTPUT SUMMARY ================\n")
+
+    # 1. Show sample BEFORE
+    print("🔹 Sample BEFORE anonymization:")
+    print(df_before[[
+        "city", "timestamp", "payment_amount", "risk_score"
+    ]].head(5))
+
+    # 2. Show sample AFTER
+    print("\n🔹 Sample AFTER anonymization:")
+    print(df_after[[
+        "city", "timestamp", "payment_amount", "risk_score"
+    ]].head(5))
+
+    # 3. Show column comparison
+    print("\n🔹 Columns in final dataset:")
+    print(df_after.columns.tolist())
+
+    # 4. Show risk comparison clearly
+    before_avg = df_before["risk_score"].mean()
+    after_avg = df_after["risk_score"].mean()
+
+    print("\n🔹 Risk Comparison:")
+    print(f"Average Risk BEFORE: {before_avg:.4f}")
+    print(f"Average Risk AFTER : {after_avg:.4f}")
+    print(f"Risk Reduction %   : {((before_avg - after_avg)/before_avg)*100:.2f}%")
+
+    # 5. Confirm file saved
+    print("\n🔹 Output file generated successfully!")
+    print(f"Saved at: {OUTPUT_PATH}")
+
+    print("\n=====================================================\n")
 
 
 if __name__ == "__main__":
